@@ -8,11 +8,33 @@
     <title>Hello, world!</title>
   </head>
   <body>
-    <div class="container mt-4">
-        <div class="d-flex m-5">
-            <input type="text" class="form-control" placeholder="Digite aqui">
+    <div class="container mt-4 flex-column">
+        <form class="d-flex mb-4" id="form">
+            <input type="text" class="form-control me-2" id="task" placeholder="Digite aqui">
             <button class="btn btn-primary">Cadastrar</button>
+        </form>
+
+        <div class="container-list">
+            <ul class="list-unstyled">
+                <li class="item mb-2">
+                    <span>text</span>
+                    <div>
+                        <span>lixeira</span> 
+                        <span>atualizar</span>
+                    </div>
+                </li>
+
+                <li class="item mb-2">
+                    <span>text</span>
+                    <div>
+                        <span>lixeira</span> 
+                        <span>atualizar</span>
+                    </div>
+                </li>
+            </ul>
         </div>
     </div>
-</body>
+
+    <script src="./index.js"></script>
+  </body>
 </html>
