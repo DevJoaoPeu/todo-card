@@ -5,4 +5,6 @@ const list = document.getElementById('list')
 
 form.addEventListener('submit', (e) => {
     e.preventDefault()
+
+    alert(input.value)
 })
