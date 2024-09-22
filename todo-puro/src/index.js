@@ -6,6 +6,7 @@ class TaskManager {
         this.url = 'http://localhost:3000/tasks';
         this.modal = new bootstrap.Modal(document.getElementById('updateModal'));
         this.closeModal = document.querySelector('button[data-bs-dismiss="modal"]')
+        this.inputModal = document.getElementById('updateInput')
         this.currentId = null;
 
         this.init();
@@ -71,16 +72,16 @@ class TaskManager {
 
     updateItem(id, text) {
         this.currentId = id; 
-        document.getElementById('updateInput').value = text; 
+        this.inputModal.value = text; 
         this.modal.show(); 
     }
 
     async updateTask() {
-        const updatedValue = document.getElementById('updateInput').value;
-        
-        if (updatedValue.trim() !== '') {
+        const updateTask = this.inputModal.value
+
+        if (updateTask.trim() !== '') {
             try {
-                await axios.put(`${this.url}/${this.currentId}`, { text: updatedValue });
+                await axios.put(`${this.url}/${this.currentId}`, { text: updateTask });
                 this.modal.hide(); 
                 this.loadTasks();
             } catch (error) {
