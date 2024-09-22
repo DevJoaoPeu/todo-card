@@ -1,0 +1,56 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    background-color: #eee;
+    max-width: 800px;
+    align-items: center;
+    margin: 30px auto;
+    padding: 40px;
+    border-radius: 10px;
+
+    .container-form {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+
+    .input {
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .button {
+     border-radius: 5px;
+     padding: 28px;
+    }
+}
+
+.list{
+    margin-top: 20px;
+    width: 100%;
+    max-width: 630px;
+
+    .item {
+        display: flex;
+        align-items: center;
+        margin: auto;
+        justify-content: space-between;
+
+        padding: 13px;
+        border-radius: 5px;
+        list-style: none;
+        background-color: #ccc;
+
+        div {
+            display: flex;
+            gap: 10px;
+        }
+    }
+    }
+   
+    
+}
+
+
+
+
