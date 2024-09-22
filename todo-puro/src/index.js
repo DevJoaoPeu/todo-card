@@ -7,6 +7,7 @@ class TaskManager {
         this.modal = new bootstrap.Modal(document.getElementById('updateModal'));
         this.closeModal = document.querySelector('button[data-bs-dismiss="modal"]')
         this.inputModal = document.getElementById('updateInput')
+        this.saveNewTaskButton = document.getElementById('saveUpdate')
         this.currentId = null;
 
         this.init();
@@ -17,7 +18,7 @@ class TaskManager {
         this.form.addEventListener('submit', (e) => this.addTask(e));
         this.closeModal.addEventListener('click', () => this.closeModalMetod())
         this.list.addEventListener('click', (e) => this.handleListClick(e));
-        document.getElementById('saveUpdate').addEventListener('click', () => this.updateTask());
+        this.saveNewTaskButton.addEventListener('click', () => this.updateTask());
     }
 
     async loadTasks() {
@@ -54,7 +55,6 @@ class TaskManager {
         
         try {
             await axios.post(this.url, { text: inputValue });
-            this.input.value = '';
             this.loadTasks();
         } catch (error) {
             console.error('Erro ao adicionar a tarefa:', error);
@@ -79,16 +79,17 @@ class TaskManager {
     async updateTask() {
         const updateTask = this.inputModal.value
 
-        if (updateTask.trim() !== '') {
-            try {
-                await axios.put(`${this.url}/${this.currentId}`, { text: updateTask });
-                this.modal.hide(); 
-                this.loadTasks();
-            } catch (error) {
-                console.error('Erro ao atualizar a tarefa:', error);
-            }
-        } else {
+        if (updateTask.trim() === '') {
             alert("Escreva algo para atualizar a tarefa");
+            return
+        }
+
+        try {
+            await axios.put(`${this.url}/${this.currentId}`, { text: updateTask });
+            this.modal.hide(); 
+            this.loadTasks();
+        } catch (error) {
+            console.error('Erro ao atualizar a tarefa:', error);
         }
     }
 
