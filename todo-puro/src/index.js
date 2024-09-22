@@ -4,6 +4,8 @@ class TaskManager {
         this.input = document.getElementById('task');
         this.list = document.getElementById('list');
         this.url = 'http://localhost:3000/tasks';
+        this.modal = new bootstrap.Modal(document.getElementById('updateModal'));
+        this.closeModal = document.querySelector('button[data-bs-dismiss="modal"]')
         this.currentId = null;
 
         this.init();
@@ -12,6 +14,7 @@ class TaskManager {
     init() {
         this.loadTasks();
         this.form.addEventListener('submit', (e) => this.addTask(e));
+        this.closeModal.addEventListener('click', () => this.closeModalMetod())
         this.list.addEventListener('click', (e) => this.handleListClick(e));
         document.getElementById('saveUpdate').addEventListener('click', () => this.updateTask());
     }
@@ -69,8 +72,7 @@ class TaskManager {
     updateItem(id, text) {
         this.currentId = id; 
         document.getElementById('updateInput').value = text; 
-        const updateModal = new bootstrap.Modal(document.getElementById('updateModal'));
-        updateModal.show(); 
+        this.modal.show(); 
     }
 
     async updateTask() {
@@ -79,8 +81,7 @@ class TaskManager {
         if (updatedValue.trim() !== '') {
             try {
                 await axios.put(`${this.url}/${this.currentId}`, { text: updatedValue });
-                const updateModal = new bootstrap.Modal(document.getElementById('updateModal'));
-                updateModal.hide(); 
+                this.modal.hide(); 
                 this.loadTasks();
             } catch (error) {
                 console.error('Erro ao atualizar a tarefa:', error);
@@ -102,7 +103,10 @@ class TaskManager {
             this.updateItem(id, text);
         }
     }
+
+    closeModalMetod() {
+        this.modal.hide()
+    }
 }
 
-// Inicializando a classe
 new TaskManager();
