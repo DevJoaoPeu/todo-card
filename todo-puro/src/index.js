@@ -117,10 +117,9 @@ class TaskManager {
         }
     }
 
-    updateItem(id, text, completed) {
+    updateItem(id, text) {
         this.currentId = id; 
         this.inputModal.value = text; 
-        this.currentCompleted = completed
         this.modal.show(); 
     }
 
@@ -133,7 +132,7 @@ class TaskManager {
         }
 
         try {
-            await axios.put(`${this.url}/${this.currentId}`, { text: updateTask, completed: this.currentCompleted });
+            await axios.patch(`${this.url}/${this.currentId}`, { text: updateTask});
             this.modal.hide(); 
             this.loadTasks();
         } catch (error) {
