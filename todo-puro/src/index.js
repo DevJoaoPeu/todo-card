@@ -1,20 +1,20 @@
 class TaskManager {
+    url = 'http://localhost:3000/items'
+    form = document.getElementById('form');
+    input = document.getElementById('task');
+    list =  document.getElementById('list');
+    modal = new bootstrap.Modal(document.getElementById('updateModal'));
+    closeModal = document.querySelector('button[data-bs-dismiss="modal"]')
+    inputModal = document.getElementById('updateInput')
+    saveNewTaskButton = document.getElementById('saveUpdate')
+    listTitle = document.getElementById('list-title')
+    listCompleted = document.getElementById('completed')
+    completedTitle = document.getElementById('completed-title')
+
+    count = 0
+    currentId = null;
+
     constructor() {
-        this.form = document.getElementById('form');
-        this.input = document.getElementById('task');
-        this.list = document.getElementById('list');
-        this.url = 'http://localhost:3000/items';
-        this.modal = new bootstrap.Modal(document.getElementById('updateModal'));
-        this.closeModal = document.querySelector('button[data-bs-dismiss="modal"]')
-        this.inputModal = document.getElementById('updateInput')
-        this.saveNewTaskButton = document.getElementById('saveUpdate')
-        this.listTitle = document.getElementById('list-title')
-        this.listCompleted = document.getElementById('completed')
-        this.completedTitle = document.getElementById('completed-title')
-
-        this.count = 0
-        this.currentId = null;
-
         this.init();
     }
 
@@ -40,7 +40,6 @@ class TaskManager {
     try {
         const response = await axios.get(this.url);
         const tasks = response.data;
-        this.count = tasks.length;
 
         if (tasks.length === 0) {
             this.listTitle.innerText = 'No tasks defined';
@@ -48,11 +47,11 @@ class TaskManager {
             return;
         }
 
-        this.listTitle.innerText = `-- To do ${this.count} --`;
-        this.list.innerHTML = ''; // Limpa a lista de pendentes
-        this.listCompleted.innerHTML = ''; // Limpa a lista de concluídas
+        this.listTitle.innerText = `-- To do --`;
+        this.list.innerHTML = ''; 
+        this.listCompleted.innerHTML = '';
 
-        // Renderiza as tarefas nas respectivas listas
+
         tasks.forEach(task => {
             const taskHTML = `
                 <li class="item mb-2" data-id="${task.id}">
@@ -70,7 +69,10 @@ class TaskManager {
             `;
 
             if (task.completed) {
-                this.listCompleted.insertAdjacentHTML('beforeend', taskHTML); 
+                this.listCompleted.insertAdjacentHTML('beforeend', taskHTML);
+                this.count++;
+                this.completedTitle.innerText = `-- Completed (${this.count}) --`;
+
             } else {
                 this.list.insertAdjacentHTML('beforeend', taskHTML); 
             }
@@ -115,9 +117,10 @@ class TaskManager {
         }
     }
 
-    updateItem(id, text) {
+    updateItem(id, text, completed) {
         this.currentId = id; 
         this.inputModal.value = text; 
+        this.currentCompleted = completed
         this.modal.show(); 
     }
 
@@ -130,7 +133,7 @@ class TaskManager {
         }
 
         try {
-            await axios.put(`${this.url}/${this.currentId}`, { text: updateTask, completed: false });
+            await axios.put(`${this.url}/${this.currentId}`, { text: updateTask, completed: this.currentCompleted });
             this.modal.hide(); 
             this.loadTasks();
         } catch (error) {
@@ -147,16 +150,15 @@ class TaskManager {
         if (e.target.closest('.update-btn')) {
             const id = e.target.closest('.update-btn').getAttribute('data-id');
             const text = e.target.closest('.update-btn').getAttribute('data-text');
-            this.updateItem(id, text);
+            const completed = e.target.closest('.item').querySelector('.check').checked;
+            this.updateItem(id, text, completed);
         }
     }
 
     async updateTaskCompleted(id, completed) {
         try {
-            // Atualiza o status da tarefa no backend
             await axios.patch(`${this.url}/${id}`, { completed });
 
-            // Recarrega as tarefas para atualizar a UI
             this.loadTasks();
         } catch (error) {
             console.error('Erro ao atualizar a tarefa:', error);
